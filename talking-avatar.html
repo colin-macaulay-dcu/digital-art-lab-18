@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Talking Avatar — Digital Art Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Playfair+Display:ital,wght@0,900;1,900&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#06101d;--navy2:#0a1825;--navy3:#0d2d4a;
+  --gold:#f5c400;--sea:#4ac9e3;--red:#e84c2b;
+  --white:#ffffff;--dim:#8ab4c4;
+  --glow-gold:0 0 24px rgba(245,196,0,.45);
+  --glow-sea:0 0 24px rgba(74,201,227,.4);
+  --glow-red:0 0 24px rgba(232,76,43,.45);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--navy);color:var(--white);overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* DCU BAR */
+.dcu-bar{position:relative;z-index:10;background:rgba(6,16,29,.97);border-bottom:1px solid rgba(245,196,0,.18);padding:.5rem 3.5rem;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px)}
+.dcu-l{display:flex;align-items:center;gap:.9rem}
+.dcu-name{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.dcu-div{width:1px;height:.85rem;background:rgba(245,196,0,.2)}
+.dcu-sub{font-size:.67rem;color:var(--dim);letter-spacing:.04em}
+.dcu-a{font-family:'DM Mono',monospace;font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sea);transition:color .2s}
+.dcu-a:hover{color:var(--gold)}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 3.5rem;background:rgba(6,16,29,.93);border-bottom:1px solid rgba(74,201,227,.12);backdrop-filter:blur(18px)}
+.nav-logo{display:flex;align-items:baseline;gap:.3rem;text-decoration:none}
+.nav-logo-tech{font-family:'Orbitron',sans-serif;font-size:.95rem;font-weight:900;letter-spacing:.1em;color:var(--gold);text-shadow:var(--glow-gold)}
+.nav-logo-art{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;font-style:italic;color:var(--sea);animation:seaGlow 3s ease-in-out infinite}
+@keyframes seaGlow{0%,100%{text-shadow:0 0 8px rgba(74,201,227,.4)}50%{text-shadow:0 0 18px rgba(74,201,227,.9),0 0 35px rgba(74,201,227,.4)}}
+.nav-back{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--sea);transition:color .2s}
+.nav-back:hover{color:var(--gold)}
+.nav-back::before{content:'← '}
+
+/* HERO */
+.hero{position:relative;z-index:1;background:var(--navy);padding:5rem 3.5rem 4rem;overflow:hidden}
+.hero::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(74,201,227,.012) 3px,rgba(74,201,227,.012) 4px);pointer-events:none}
+.hero-inner{position:relative;z-index:2;max-width:800px}
+.crumb{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);margin-bottom:1rem}
+.crumb a{color:var(--sea);transition:color .2s}
+.crumb a:hover{color:var(--gold)}
+.crumb span{color:var(--gold);margin:0 .4rem}
+.hero-tag{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--sea);margin-bottom:1.2rem;display:flex;align-items:center;gap:.7rem}
+.hero-tag::before{content:'//';color:var(--gold);font-weight:700}
+.hero h1{margin-bottom:1.5rem;line-height:.95}
+.h1-tool{font-family:'Orbitron',sans-serif;font-size:clamp(1.5rem,3vw,2.8rem);font-weight:900;letter-spacing:.06em;color:var(--sea);text-shadow:var(--glow-sea);display:block}
+.h1-main{font-family:'Playfair Display',serif;font-size:clamp(3rem,6vw,6rem);font-weight:900;font-style:italic;color:var(--gold);text-shadow:var(--glow-gold);display:block;line-height:.9}
+.hero-desc{font-size:1rem;line-height:1.75;color:var(--dim);max-width:600px;margin-bottom:2rem}
+.meta-pills{display:flex;flex-wrap:wrap;gap:.6rem}
+.mpill{padding:.3rem .9rem;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid rgba(74,201,227,.25);color:var(--sea);transition:all .2s}
+.mpill.hot{background:var(--red);border-color:var(--red);color:#fff}
+
+/* OVERVIEW STRIP */
+.strip{position:relative;z-index:1;background:rgba(245,196,0,.06);border-top:1px solid rgba(245,196,0,.15);border-bottom:1px solid rgba(245,196,0,.15);padding:2rem 3.5rem;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem}
+.si{text-align:center}
+.si-icon{font-size:1.6rem;display:block;margin-bottom:.4rem}
+.si-label{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.si-value{font-family:'Orbitron',sans-serif;font-size:.9rem;font-weight:700;color:var(--gold);margin-top:.2rem}
+
+/* SECTIONS */
+.sec{padding:4.5rem 3.5rem;position:relative;z-index:1}
+.sec-tag{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--sea);margin-bottom:.8rem;display:flex;align-items:center;gap:.6rem}
+.sec-tag::before{content:'//';color:var(--gold);font-weight:700}
+.sec-h{margin-bottom:1.2rem;line-height:1}
+.sec-h .tech{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,2.2vw,2rem);font-weight:900;color:var(--gold);text-shadow:var(--glow-gold);display:inline}
+.sec-h .art{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,2.8vw,2.6rem);font-weight:900;font-style:italic;color:var(--white);display:inline}
+.sec-body{font-size:.95rem;line-height:1.75;color:var(--dim);max-width:620px}
+
+/* OBJECTIVES */
+.obj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(74,201,227,.08);border:1px solid rgba(74,201,227,.1);margin-top:2.5rem}
+.obj-card{background:rgba(6,16,29,.55);padding:2.5rem 2rem;position:relative;overflow:hidden;transition:background .3s}
+.obj-card:hover{background:rgba(10,24,37,.92)}
+.obj-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .35s}
+.obj-card:hover::after{transform:scaleX(1)}
+.oc-num{font-family:'Orbitron',sans-serif;font-size:4rem;font-weight:900;color:rgba(245,196,0,.06);position:absolute;top:.8rem;right:1rem;user-select:none;transition:color .3s}
+.obj-card:hover .oc-num{color:rgba(245,196,0,.12)}
+.oc-icon{font-size:1.8rem;margin-bottom:1rem}
+.oc-title{font-family:'DM Mono',monospace;font-size:.88rem;font-weight:500;color:var(--sea);margin-bottom:.6rem}
+.oc-body{font-size:.85rem;line-height:1.65;color:var(--dim)}
+
+/* DOWNLOADS */
+.downloads{background:transparent}
+.dl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:rgba(245,196,0,.07);border:1px solid rgba(245,196,0,.1);margin-top:2.5rem}
+.dl-card{background:rgba(10,24,37,.8);padding:2.5rem 2rem;transition:background .3s;position:relative}
+.dl-card:hover{background:rgba(245,196,0,.04)}
+.dl-icon{font-size:2rem;margin-bottom:1rem;display:block}
+.dl-title{font-family:'DM Mono',monospace;font-size:.88rem;font-weight:500;color:var(--gold);margin-bottom:.35rem}
+.dl-sub{font-size:.78rem;color:var(--dim);margin-bottom:1.5rem;line-height:1.5}
+.dl-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.2rem;font-family:'DM Mono',monospace;font-size:.68rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;background:var(--red);color:#fff;border:1.5px solid var(--red);transition:all .25s}
+.dl-btn:hover{background:transparent;color:var(--red);box-shadow:var(--glow-red)}
+.tab-dl{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(74,201,227,.1);display:flex;align-items:center;gap:1rem}
+.tab-dl-label{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.dl-btn:hover{background:transparent;color:var(--red);box-shadow:var(--glow-red)}
+
+/* ACTIVITIES */
+.activities{background:transparent}
+.act-tabs{display:flex;gap:1px;background:rgba(74,201,227,.08);border:1px solid rgba(74,201,227,.1);margin-top:2.5rem}
+.act-tab{flex:1;padding:1rem 1.5rem;background:rgba(6,16,29,.85);font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;border:none;cursor:pointer;transition:all .2s;text-align:center;color:var(--dim)}
+.act-tab.active{background:rgba(10,24,37,.95);color:var(--gold)}
+.act-tab:hover:not(.active){background:rgba(74,201,227,.05);color:var(--sea)}
+.act-panel{display:none;border:1px solid rgba(74,201,227,.1);border-top:none}
+.act-panel.active{display:grid;grid-template-columns:1fr 1fr}
+.ap-left{padding:3rem;border-right:1px solid rgba(74,201,227,.08);background:rgba(6,16,29,.55)}
+.ap-right{padding:3rem;background:rgba(10,24,37,.55)}
+.act-age{display:inline-block;padding:.28rem .8rem;font-family:'DM Mono',monospace;font-size:.65rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;background:var(--teal, #4ac9e3);color:var(--navy);margin-bottom:1.2rem}
+.act-title{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:.03em;color:var(--gold);margin-bottom:.8rem;line-height:1.2}
+.act-obj{font-size:.82rem;font-weight:500;color:var(--sea);margin-bottom:1rem;font-style:italic}
+.act-body{font-size:.88rem;line-height:1.75;color:var(--dim)}
+.out-title{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+.out-item{display:flex;gap:.8rem;align-items:flex-start;margin-bottom:.8rem;padding-bottom:.8rem;border-bottom:1px solid rgba(74,201,227,.07)}
+.out-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.out-n{font-family:'Orbitron',sans-serif;font-size:.75rem;font-weight:700;color:var(--red);flex-shrink:0;width:1.4rem}
+.out-t{font-size:.85rem;line-height:1.6;color:var(--dim)}
+.out-t strong{color:var(--gold);font-weight:500}
+
+/* STEPS */
+.steps-sec{background:transparent}
+.steps-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:rgba(245,196,0,.07);border:1px solid rgba(245,196,0,.1);margin-top:2.5rem}
+.step-card{background:rgba(10,24,37,.55);padding:2rem 1.5rem;transition:background .3s}
+.step-card:hover{background:rgba(245,196,0,.04)}
+.step-num{font-family:'Orbitron',sans-serif;font-size:1.6rem;font-weight:900;color:var(--gold);text-shadow:var(--glow-gold);margin-bottom:.8rem;line-height:1}
+.step-title{font-family:'DM Mono',monospace;font-size:.78rem;font-weight:500;color:var(--sea);margin-bottom:.5rem}
+.step-body{font-size:.8rem;line-height:1.65;color:var(--dim)}
+
+/* COMPETENCIES */
+.comp-sec{background:transparent}
+.comp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:rgba(74,201,227,.07);border:1px solid rgba(74,201,227,.1);margin-top:2.5rem}
+.comp-card{background:rgba(6,16,29,.55);padding:2.5rem 2.5rem;transition:background .25s}
+.comp-card:hover{background:rgba(74,201,227,.05)}
+.comp-card:hover .cc-title{color:var(--sea);text-shadow:var(--glow-sea)}
+.cc-header{display:flex;align-items:center;gap:1rem;margin-bottom:.7rem}
+.cc-icon{width:2.6rem;height:2.6rem;background:rgba(245,196,0,.08);border:1px solid rgba(245,196,0,.2);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.cc-title{font-family:'DM Mono',monospace;font-size:.88rem;font-weight:500;color:var(--gold);transition:all .25s}
+.cc-body{font-size:.85rem;line-height:1.65;color:var(--dim)}
+
+/* QUESTIONS */
+.questions{background:transparent}
+.q-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;margin-top:2.5rem}
+.q-col-title{font-family:'DM Mono',monospace;font-size:.72rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.2rem;padding-bottom:.7rem;border-bottom:2px solid}
+.q-col-title.hot{border-color:var(--red);color:var(--red)}
+.q-col-title.low{border-color:var(--sea);color:var(--sea)}
+.q-list{list-style:none}
+.q-list li{padding:.65rem 0;border-bottom:1px solid rgba(74,201,227,.07);font-size:.88rem;line-height:1.6;color:var(--dim);padding-left:1.2rem;position:relative}
+.q-list li::before{content:'→';position:absolute;left:0;color:var(--gold);font-size:.8rem}
+
+/* ASSESSMENT */
+.assessment{background:transparent}
+.assess-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:rgba(74,201,227,.07);border:1px solid rgba(74,201,227,.1);margin-top:2.5rem}
+.assess-card{background:rgba(6,16,29,.55);padding:2.5rem 2rem;transition:background .3s}
+.assess-card:hover{background:var(--navy2)}
+.assess-icon{font-size:2rem;margin-bottom:1rem}
+.assess-title{font-family:'DM Mono',monospace;font-size:.85rem;font-weight:500;color:var(--gold);margin-bottom:.5rem}
+.assess-body{font-size:.82rem;line-height:1.65;color:var(--dim)}
+
+/* MATERIALS */
+.materials{background:transparent}
+.mat-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;margin-top:2.5rem}
+.mat-col-title{font-family:'DM Mono',monospace;font-size:.72rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;padding-bottom:.7rem;border-bottom:2px solid rgba(245,196,0,.3)}
+.mat-list{list-style:none}
+.mat-list li{padding:.5rem 0;border-bottom:1px solid rgba(74,201,227,.07);font-size:.88rem;line-height:1.6;color:var(--dim);padding-left:1.2rem;position:relative}
+.mat-list li::before{content:'·';position:absolute;left:0;color:var(--sea);font-weight:700;font-size:1.1rem;line-height:1.4}
+.mat-list li strong{color:var(--gold);font-weight:500}
+
+/* DIFF */
+.diff{background:transparent}
+.diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(74,201,227,.07);border:1px solid rgba(74,201,227,.1);margin-top:2.5rem}
+.diff-card{background:rgba(6,16,29,.55);padding:2.5rem 2rem;transition:background .3s}
+.diff-card:hover{background:var(--navy2)}
+.diff-card:hover .dc-title{color:var(--sea)}
+.dc-tag{display:inline-block;padding:.22rem .7rem;font-family:'DM Mono',monospace;font-size:.62rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;background:rgba(74,201,227,.1);border:1px solid rgba(74,201,227,.3);color:var(--sea);margin-bottom:.9rem}
+.dc-title{font-family:'DM Mono',monospace;font-size:.88rem;font-weight:500;color:var(--gold);margin-bottom:.6rem;transition:color .3s}
+.dc-body{font-size:.83rem;line-height:1.65;color:var(--dim)}
+
+/* LINKS */
+.links-sec{position:relative;z-index:1;background:var(--navy3);border-top:1px solid rgba(245,196,0,.14);border-bottom:1px solid rgba(245,196,0,.14);padding:3rem 3.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:2rem}
+.links-title{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:900;color:var(--gold);text-shadow:var(--glow-gold)}
+.links-list{display:flex;flex-wrap:wrap;gap:.7rem}
+.link-btn{padding:.55rem 1.3rem;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;background:rgba(74,201,227,.08);color:var(--sea);border:1px solid rgba(74,201,227,.3);transition:all .2s}
+.link-btn:hover{background:var(--sea);color:var(--navy)}
+
+/* FOOTER */
+footer{position:relative;z-index:1;background:rgba(6,16,29,.99);border-top:1px solid rgba(74,201,227,.1);padding:4rem 3.5rem;display:grid;grid-template-columns:2fr 1fr 1fr;gap:4rem}
+.f-logo{display:flex;align-items:baseline;gap:.3rem;margin-bottom:.9rem}
+.f-logo-tech{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:900;letter-spacing:.08em;color:var(--gold);text-shadow:var(--glow-gold)}
+.f-logo-art{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;font-style:italic;color:var(--sea)}
+.f-desc{font-size:.85rem;line-height:1.7;color:var(--dim);max-width:320px}
+.f-ct{font-family:'DM Mono',monospace;font-size:.68rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem}
+.f-links{list-style:none}
+.f-links li{margin-bottom:.6rem}
+.f-links a{font-size:.85rem;color:var(--dim);transition:color .2s}
+.f-links a:hover{color:var(--sea)}
+.f-bot{position:relative;z-index:1;background:rgba(6,16,29,.99);padding:1.2rem 3.5rem;border-top:1px solid rgba(74,201,227,.07);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+.f-bot p{font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.05em;color:rgba(138,180,196,.35)}
+.f-bot strong{color:var(--gold)}
+.f-bot a{color:var(--sea);transition:color .2s}
+.f-bot a:hover{color:var(--gold)}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.85rem 2rem;font-family:'DM Mono',monospace;font-size:.75rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;border:1.5px solid transparent;cursor:pointer;transition:all .25s}
+.btn-gold{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.btn-gold:hover{background:transparent;color:var(--gold);box-shadow:var(--glow-gold)}
+
+@media(max-width:900px){
+  .dcu-bar,nav,.f-bot{padding-left:1.5rem;padding-right:1.5rem}
+  .sec,.links-sec,footer,.strip{padding-left:1.5rem;padding-right:1.5rem}
+  .hero{padding:4rem 1.5rem 3rem}
+  .act-panel.active{grid-template-columns:1fr}
+  .ap-left{border-right:none;border-bottom:1px solid rgba(74,201,227,.08)}
+  .obj-grid,.steps-grid{grid-template-columns:1fr}
+  .comp-grid,.q-grid,.mat-grid,.diff-grid{grid-template-columns:1fr}
+  .assess-grid,.dl-grid{grid-template-columns:1fr 1fr}
+  .strip{grid-template-columns:repeat(2,1fr)}
+  footer{grid-template-columns:1fr;gap:2rem}
+  .act-tabs{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="dcu-bar">
+  <div class="dcu-l">
+    <span class="dcu-name">Dublin City University</span>
+    <div class="dcu-div"></div>
+    <span class="dcu-sub">Funded PhD Research · Institute of Education</span>
+  </div>
+  <a href="https://www.dcu.ie" target="_blank" class="dcu-a">dcu.ie →</a>
+</div>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <span class="nav-logo-tech">Digital</span>
+    <span class="nav-logo-art">Art Lab</span>
+  </a>
+  <a href="index.html#resources" class="nav-back">Back to Lesson Ideas</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <p class="crumb"><a href="index.html#resources">Lesson Ideas</a> <span>/</span> Talking Avatar</p>
+    <p class="hero-tag">Talkr App · Digital Portrait Making · Cross-Curricular</p>
+    <h1>
+      <span class="h1-tool">Tool Tutorial —</span>
+      <span class="h1-main">Talking Avatar</span>
+    </h1>
+    <p class="hero-desc">Students design a portrait, bring it to life using the Talkr app, and record a voiceover as their character — combining visual art, digital literacy, and oral communication in one creative activity.</p>
+    <div class="meta-pills">
+      <span class="mpill hot">Tool: Talkr App</span>
+      <span class="mpill">1st – 6th Class</span>
+      <span class="mpill">Visual Arts</span>
+      <span class="mpill">Digital Literacy</span>
+      <span class="mpill">Cross-Curricular</span>
+    </div>
+  </div>
+</div>
+
+<div class="strip">
+  <div class="si"><span class="si-icon">🎯</span><div class="si-label">Activities</div><div class="si-value">4 Lessons</div></div>
+  <div class="si"><span class="si-icon">🏫</span><div class="si-label">Class Level</div><div class="si-value">1st – 6th</div></div>
+  <div class="si"><span class="si-icon">📱</span><div class="si-label">Digital Tool</div><div class="si-value">Talkr App</div></div>
+  <div class="si"><span class="si-icon">🔗</span><div class="si-label">Curriculum</div><div class="si-value">IPC Aligned</div></div>
+</div>
+
+<!-- OBJECTIVES -->
+<div class="sec" id="objectives">
+  <p class="sec-tag">What This Resource Covers</p>
+  <h2 class="sec-h"><span class="tech">Core</span> <span class="art">Objectives</span></h2>
+  <p class="sec-body">Across all four activities, students build the same core skills — applied to different historical, literary, and artistic contexts.</p>
+  <div class="obj-grid">
+    <div class="obj-card"><span class="oc-num">01</span><div class="oc-icon">🎨</div><h3 class="oc-title">Creating</h3><p class="oc-body">Design a digital or physical portrait of a character, incorporating artistic elements — line, colour, texture — to reflect personality, era, or artistic style.</p></div>
+    <div class="obj-card"><span class="oc-num">02</span><div class="oc-icon">🎤</div><h3 class="oc-title">Performing &amp; Presenting</h3><p class="oc-body">Animate the portrait using the Talkr app and record a voiceover script. Present the talking character — combining oral language, storytelling, and digital skills.</p></div>
+    <div class="obj-card"><span class="oc-num">03</span><div class="oc-icon">🔍</div><h3 class="oc-title">Responding &amp; Connecting</h3><p class="oc-body">Analyse and critique the character's context — whether artistic, historical, or literary. Reflect on creative choices and engage in meaningful peer feedback.</p></div>
+  </div>
+</div>
+
+<!-- ACTIVITIES -->
+<div class="sec activities" id="activities">
+  <p class="sec-tag">Four Activities</p>
+  <h2 class="sec-h"><span class="tech">Choose</span> <span class="art">a Lesson</span></h2>
+  <p class="sec-body">Each activity uses the same Talkr app workflow but applies it to a different theme.</p>
+  <div class="act-tabs">
+    <button class="act-tab active" onclick="showTab('willy',this)">🍫 Willy Wonka</button>
+    <button class="act-tab" onclick="showTab('fauvism',this)">🎨 Fauvism</button>
+    <button class="act-tab" onclick="showTab('titanic',this)">🚢 Titanic</button>
+    <button class="act-tab" onclick="showTab('viking',this)">⚔️ Vikings</button>
+  </div>
+  <div class="act-panel active" id="tab-willy">
+    <div class="ap-left"><span class="act-age">1st – 2nd Class</span><h3 class="act-title">Create a Character Profile: Roald Dahl's Willy Wonka</h3><p class="act-obj">Bring a character from Charlie and the Chocolate Factory to life by creating a digital talking portrait and recording their voice.</p><p class="act-body">Students explore the character of Willy Wonka by creating a visual and narrative character profile. They design a portrait incorporating his unique traits and whimsical personality, then bring it to life using the Talkr app to animate and record a voiceover. The lesson combines literacy, visual arts, and digital creativity.</p><div class="tab-dl"><span class="tab-dl-label">Lesson Plan PDF</span><a href="lesson-willy-wonka.pdf" download class="dl-btn">↓ Download PDF</a></div></div>
+    <div class="ap-right"><p class="out-title">Learning Outcomes</p>
+      <div class="out-item"><span class="out-n">1</span><p class="out-t"><strong>Creative Expression:</strong> Students produce a personalised portrait of Willy Wonka, showcasing his eccentric and imaginative traits.</p></div>
+      <div class="out-item"><span class="out-n">2</span><p class="out-t"><strong>Literary Understanding:</strong> Students demonstrate understanding of Willy Wonka's character and role in the story.</p></div>
+      <div class="out-item"><span class="out-n">3</span><p class="out-t"><strong>Digital Literacy:</strong> Students use animation and voice recording tools to bring their portrayal to life.</p></div>
+      <div class="out-item"><span class="out-n">4</span><p class="out-t"><strong>Communication Skills:</strong> Students craft and share a narrative voiceover that reflects Willy Wonka's personality.</p></div>
+      <div class="out-item"><span class="out-n">5</span><p class="out-t"><strong>Reflective Learning:</strong> Students reflect on how their artistic and narrative choices capture the essence of the character.</p></div>
+    </div>
+  </div>
+  <div class="act-panel" id="tab-fauvism">
+    <div class="ap-left"><span class="act-age">3rd – 4th Class</span><h3 class="act-title">Create an Artist Profile: The Movement of Fauvism</h3><p class="act-obj">Using the Talkr app, create a digital character profile of a Fauvist artist, combining their artistic style and personal story.</p><p class="act-body">Students explore the bold and expressive art movement of Fauvism by creating a fictional artist inspired by its principles. They design a portrait using exaggerated colours and simplified forms, then animate their artist and record a voiceover to express their character's artistic philosophy.</p><div class="tab-dl"><span class="tab-dl-label">Lesson Plan PDF</span><a href="lesson-fauvism.pdf" download class="dl-btn">↓ Download PDF</a></div></div>
+    <div class="ap-right"><p class="out-title">Learning Outcomes</p>
+      <div class="out-item"><span class="out-n">1</span><p class="out-t"><strong>Creative Expression:</strong> A vivid Fauvist-inspired portrait capturing the essence of the movement's style.</p></div>
+      <div class="out-item"><span class="out-n">2</span><p class="out-t"><strong>Art Historical Understanding:</strong> Knowledge of Fauvism — bold colours, simplified forms, and emotional expression.</p></div>
+      <div class="out-item"><span class="out-n">3</span><p class="out-t"><strong>Digital Literacy:</strong> Using animation and voice recording to bring a Fauvist artist to life.</p></div>
+      <div class="out-item"><span class="out-n">4</span><p class="out-t"><strong>Communication Skills:</strong> Articulating the artist's backstory and philosophy through a voiceover.</p></div>
+      <div class="out-item"><span class="out-n">5</span><p class="out-t"><strong>Reflective Learning:</strong> Reflecting on artistic choices and the emotional impact of Fauvist techniques.</p></div>
+    </div>
+  </div>
+  <div class="act-panel" id="tab-titanic">
+    <div class="ap-left"><span class="act-age">3rd – 4th Class</span><h3 class="act-title">Create a Titanic Passenger Profile</h3><p class="act-obj">Create a digital talking portrait of an imaginary Titanic passenger, bringing their story to life.</p><p class="act-body">Students create a fictional Titanic passenger — combining historical context with creative storytelling. They design a digital portrait considering class, background, and motivations, then animate their character using the Talkr app and record a voiceover backstory.</p><div class="tab-dl"><span class="tab-dl-label">Lesson Plan PDF</span><a href="lesson-titanic.pdf" download class="dl-btn">↓ Download PDF</a></div></div>
+    <div class="ap-right"><p class="out-title">Learning Outcomes</p>
+      <div class="out-item"><span class="out-n">1</span><p class="out-t"><strong>Creative Expression:</strong> A personalised Titanic character portrait reflecting understanding of the era.</p></div>
+      <div class="out-item"><span class="out-n">2</span><p class="out-t"><strong>Historical Understanding:</strong> Knowledge of the Titanic's social structure and historical significance.</p></div>
+      <div class="out-item"><span class="out-n">3</span><p class="out-t"><strong>Digital Literacy:</strong> Using digital drawing and animation tools to design and animate a character.</p></div>
+      <div class="out-item"><span class="out-n">4</span><p class="out-t"><strong>Communication Skills:</strong> Crafting a backstory through a recorded voiceover.</p></div>
+      <div class="out-item"><span class="out-n">5</span><p class="out-t"><strong>Reflective Learning:</strong> Connecting creative work to historical themes and the experiences of Titanic passengers.</p></div>
+    </div>
+  </div>
+  <div class="act-panel" id="tab-viking">
+    <div class="ap-left"><span class="act-age">5th – 6th Class</span><h3 class="act-title">Create a Viking Warrior Profile</h3><p class="act-obj">Bring a Viking warrior character to life by creating a digital talking portrait and sharing their story.</p><p class="act-body">Students create a Viking warrior, explorer, or craftsperson — combining historical understanding with artistic expression. They design and paint a portrait using traditional art materials, then bring the character to life with the Talkr app to animate and record a voiceover.</p><div class="tab-dl"><span class="tab-dl-label">Lesson Plan PDF</span><a href="lesson-vikings.pdf" download class="dl-btn">↓ Download PDF</a></div></div>
+    <div class="ap-right"><p class="out-title">Learning Outcomes</p>
+      <div class="out-item"><span class="out-n">1</span><p class="out-t"><strong>Creative Expression:</strong> A unique Viking character portrait showcasing bold artistic choices.</p></div>
+      <div class="out-item"><span class="out-n">2</span><p class="out-t"><strong>Historical Understanding:</strong> Knowledge of Viking roles, culture, and motivations through character design.</p></div>
+      <div class="out-item"><span class="out-n">3</span><p class="out-t"><strong>Digital Literacy:</strong> Animating and voicing a Viking character, combining traditional art with technology.</p></div>
+      <div class="out-item"><span class="out-n">4</span><p class="out-t"><strong>Communication Skills:</strong> Presenting the character to peers, articulating their story and cultural significance.</p></div>
+      <div class="out-item"><span class="out-n">5</span><p class="out-t"><strong>Reflective Learning:</strong> Connecting art and history meaningfully through creative choices.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- STEPS -->
+<div class="sec steps-sec" id="steps">
+  <p class="sec-tag">The Activity Workflow</p>
+  <h2 class="sec-h"><span class="tech">Five Steps —</span> <span class="art">Every Activity</span></h2>
+  <p class="sec-body">The same five-step process works across all four activities — students simply apply it to a different character or context.</p>
+  <div class="steps-grid">
+    <div class="step-card"><div class="step-num">01</div><h4 class="step-title">Choose Your Character</h4><p class="step-body">Pick a character, historical figure, or artist. Consider their personality, background, and what makes them unique.</p></div>
+    <div class="step-card"><div class="step-num">02</div><h4 class="step-title">Design the Portrait</h4><p class="step-body">Draw or create a digital image — physical art materials, drawing apps like Procreate, or a combination of both.</p></div>
+    <div class="step-card"><div class="step-num">03</div><h4 class="step-title">Set Up the Avatar</h4><p class="step-body">Import your portrait into the Talkr app. Set up the animation features — eyes, mouth, and facial movement.</p></div>
+    <div class="step-card"><div class="step-num">04</div><h4 class="step-title">Record the Voiceover</h4><p class="step-body">Write a short script and record it in character. What would this person say about themselves or their world?</p></div>
+    <div class="step-card"><div class="step-num">05</div><h4 class="step-title">Share Your Work</h4><p class="step-body">Play your talking portrait for the class. Engage in peer feedback, gallery walks, or a showcase presentation.</p></div>
+  </div>
+</div>
+
+<!-- COMPETENCIES -->
+<div class="sec comp-sec" id="competencies">
+  <p class="sec-tag">Key Competencies</p>
+  <h2 class="sec-h"><span class="tech">What Students</span> <span class="art">Develop</span></h2>
+  <p class="sec-body">This resource develops competencies across multiple areas of the new Irish Primary Curriculum.</p>
+  <div class="comp-grid">
+    <div class="comp-card"><div class="cc-header"><div class="cc-icon">💡</div><h4 class="cc-title">Being Creative</h4></div><p class="cc-body">Encourages imaginative thinking, innovative use of digital tools, and creative problem-solving through character design and storytelling.</p></div>
+    <div class="comp-card"><div class="cc-header"><div class="cc-icon">🗣️</div><h4 class="cc-title">Being a Communicator</h4></div><p class="cc-body">The voiceover activity develops oral communication skills — clarity, expressive language, and structured presentation.</p></div>
+    <div class="comp-card"><div class="cc-header"><div class="cc-icon">📱</div><h4 class="cc-title">Being a Digital Learner</h4></div><p class="cc-body">Students gain hands-on experience with animation and voice recording tools, building confidence in using digital technology creatively.</p></div>
+    <div class="comp-card"><div class="cc-header"><div class="cc-icon">🌍</div><h4 class="cc-title">Cultural &amp; Cross-Curricular</h4></div><p class="cc-body">By exploring artists, historical figures, and literary characters, students engage with history, literacy, SPHE, and cultural awareness.</p></div>
+  </div>
+</div>
+
+<!-- QUESTIONS -->
+<div class="sec questions" id="questions">
+  <p class="sec-tag">Classroom Discussion</p>
+  <h2 class="sec-h"><span class="tech">Key Thinking</span> <span class="art">Questions</span></h2>
+  <p class="sec-body">Sample questions to use across the activities — adapt for your chosen character or theme.</p>
+  <div class="q-grid">
+    <div><p class="q-col-title hot">Higher-Order Thinking</p>
+      <ul class="q-list">
+        <li>Why do you think this character acts the way they do? What shaped them?</li>
+        <li>If your character could give advice to someone today, what would they say?</li>
+        <li>How might your character's experiences have changed them over time?</li>
+        <li>What emotions did you try to show through your artistic choices?</li>
+        <li>How could art and technology help us understand historical figures or fictional characters?</li>
+        <li>If you could meet your character, what would you ask them?</li>
+        <li>How might your character's story be different if they lived in today's world?</li>
+      </ul>
+    </div>
+    <div><p class="q-col-title low">Lower-Order Thinking</p>
+      <ul class="q-list">
+        <li>Who is your character? What do they look like?</li>
+        <li>What is their name and where do they come from?</li>
+        <li>What do they do? What is their job or role?</li>
+        <li>What colours did you use and why?</li>
+        <li>What does your character say in their voiceover?</li>
+        <li>What materials did you use to create your portrait?</li>
+        <li>What did you enjoy most about this activity?</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ASSESSMENT -->
+<div class="sec assessment" id="assessment">
+  <p class="sec-tag">Assessment</p>
+  <h2 class="sec-h"><span class="tech">How to</span> <span class="art">Assess This Work</span></h2>
+  <div class="assess-grid">
+    <div class="assess-card"><div class="assess-icon">📁</div><h4 class="assess-title">Digital Portfolios</h4><p class="assess-body">Students collect and curate their portrait, script, and animated voiceover as a digital portfolio entry — evidence of process and outcome.</p></div>
+    <div class="assess-card"><div class="assess-icon">💬</div><h4 class="assess-title">Peer Feedback</h4><p class="assess-body">Gallery walks, group rotations, or spotlight presentations allow students to give and receive constructive feedback.</p></div>
+    <div class="assess-card"><div class="assess-icon">🔍</div><h4 class="assess-title">Reflection &amp; Critique</h4><p class="assess-body">Students reflect on their artistic and narrative choices — what worked, what they'd do differently, and how their work connects to the theme.</p></div>
+    <div class="assess-card"><div class="assess-icon">👁️</div><h4 class="assess-title">Teacher Observation</h4><p class="assess-body">Observations focus on creativity, technique, and presentation — assessed on individual effort and progress rather than uniform standards.</p></div>
+  </div>
+</div>
+
+<!-- MATERIALS -->
+<div class="sec materials" id="materials">
+  <p class="sec-tag">What You'll Need</p>
+  <h2 class="sec-h"><span class="tech">Resources &amp;</span> <span class="art">Materials</span></h2>
+  <div class="mat-grid">
+    <div><p class="mat-col-title">Art Materials</p>
+      <ul class="mat-list">
+        <li><strong>Paper:</strong> A3 or A4 drawing paper, sketchbooks, or cardstock</li>
+        <li><strong>Sketching:</strong> Pencils, erasers, and sharpeners</li>
+        <li><strong>Colour:</strong> Coloured pencils, markers, watercolours, acrylic paints</li>
+        <li><strong>Chalk Pastels:</strong> Bright, bold colours — ideal for Fauvism activity</li>
+        <li><strong>Collage (optional):</strong> Coloured paper, scissors, glue sticks</li>
+        <li><strong>Markers:</strong> Fine-tip black markers for outlines and details</li>
+        <li><strong>Reference images:</strong> Visual examples relevant to each activity's theme</li>
+      </ul>
+    </div>
+    <div><p class="mat-col-title">Digital Tools &amp; Hardware</p>
+      <ul class="mat-list">
+        <li><strong>iPads or Tablets:</strong> One per student or per pair — fully charged</li>
+        <li><strong>Talkr App:</strong> Pre-installed and updated on all devices</li>
+        <li><strong>Headphones with microphones:</strong> For recording voiceovers</li>
+        <li><strong>Styluses (optional):</strong> For more precise digital drawing</li>
+        <li><strong>Classroom Wi-Fi:</strong> Stable connection for app use</li>
+        <li><strong>Drawing apps (optional):</strong> Procreate, Tayasui Sketches, or Canva</li>
+        <li><strong>Projector / Whiteboard:</strong> For teacher demonstrations</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- DIFFERENTIATION -->
+<div class="sec diff" id="differentiation">
+  <p class="sec-tag">Inclusive Teaching</p>
+  <h2 class="sec-h"><span class="tech">Differentiation</span> <span class="art">Strategies</span></h2>
+  <p class="sec-body">All four activities are designed to be fully inclusive. Here's how to adapt for different learners.</p>
+  <div class="diff-grid">
+    <div class="diff-card"><span class="dc-tag">Content</span><h4 class="dc-title">Vary the Resources</h4><p class="dc-body">Offer simplified summaries or video clips for students needing support. Provide in-depth texts or primary sources for advanced learners.</p></div>
+    <div class="diff-card"><span class="dc-tag">Process</span><h4 class="dc-title">Scaffold the Steps</h4><p class="dc-body">Use character profile templates with sentence starters for less confident students. Offer open-ended prompts for advanced learners. Pair students for peer support.</p></div>
+    <div class="diff-card"><span class="dc-tag">Product</span><h4 class="dc-title">Flexible Output</h4><p class="dc-body">Less confident: a simple portrait and short structured script. Advanced: a detailed portrait with elaborate backstory and longer voiceover. All outputs are valued equally.</p></div>
+    <div class="diff-card"><span class="dc-tag">Environment</span><h4 class="dc-title">Station-Based Support</h4><p class="dc-body">Set up a guided station with teacher support, an independent station for confident learners, and a tech help station for the app.</p></div>
+    <div class="diff-card"><span class="dc-tag">Assessment</span><h4 class="dc-title">Individual Progress</h4><p class="dc-body">Assess based on effort, creativity, and engagement — not uniform standards. Simple reflection questions for less confident learners; deeper critical reflection for advanced.</p></div>
+    <div class="diff-card"><span class="dc-tag">Extension</span><h4 class="dc-title">Going Further</h4><p class="dc-body">Challenge advanced students to design a new invention (Wonka), create a philosophical motto (Fauvism), add dramatic Titanic storytelling, or include Viking symbolic patterns.</p></div>
+  </div>
+</div>
+
+<!-- LINKS -->
+<div class="links-sec" id="links">
+  <div>
+    <p class="links-title">Useful Links</p>
+    <p style="font-size:.82rem;color:var(--dim);margin-top:.4rem">Tools, curriculum documents, and supporting materials.</p>
+  </div>
+  <div class="links-list">
+    <a href="https://talkrapp.com/" target="_blank" class="link-btn">Talkr App →</a>
+    <a href="https://sites.google.com/view/art-tech-ing/home" target="_blank" class="link-btn">Art Tech.ing →</a>
+    <a href="https://www.ncca.ie" target="_blank" class="link-btn">NCCA →</a>
+    <a href="https://www.curriculumonline.ie/primary/curriculum-areas/arts-education/visual-arts/" target="_blank" class="link-btn">Irish Primary Art Curriculum →</a>
+    <a href="index.html" class="link-btn">← Back to DAL Home</a>
+  </div>
+</div>
+
+<footer>
+  <div>
+    <div class="f-logo"><span class="f-logo-tech">Digital</span><span class="f-logo-art">Art Lab</span></div>
+    <p class="f-desc">A creative tech resource platform for Irish primary teachers — where traditional art-making meets digital technology.</p>
+  </div>
+  <div>
+    <p class="f-ct">Platform</p>
+    <ul class="f-links">
+      <li><a href="#">Lesson Ideas</a></li>
+      <li><a href="#">Tool Tutorials</a></li>
+      <li><a href="#">Workshop Exemplars</a></li>
+      <li><a href="#">Curriculum Connections</a></li>
+      <li><a href="#">Teacher CPD</a></li>
+      <li><a href="#">Download Packs</a></li>
+    </ul>
+  </div>
+  <div>
+    <p class="f-ct">Project</p>
+    <ul class="f-links">
+      <li><a href="#">About the DAL</a></li>
+      <li><a href="#">Research Background</a></li>
+      <li><a href="#">Teacher Voices</a></li>
+      <li><a href="#">Give Feedback</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="f-bot">
+  <p>Digital Art Lab — <strong>PhD Research Platform</strong> · <a href="https://www.dcu.ie" target="_blank">Dublin City University</a></p>
+  <p>Talking Avatar Lesson Resource · Fostering Digital Empowerment</p>
+</div>
+
+<script>
+const canvas=document.getElementById('bg');
+const ctx=canvas.getContext('2d');
+let W,H;
+const COLS=[{r:245,g:196,b:0},{r:74,g:201,b:227},{r:232,g:76,b:43}];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+function lerp(a,b,t){return a+(b-a)*t}
+function easeInOut(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2}
+
+// Kandinsky morphing polygon
+class KandShape{
+  constructor(cx,cy,col,size,alpha,type){
+    this.cx=cx;this.cy=cy;this.col=col;this.size=size;this.alpha=alpha;this.type=type;
+    this.phase=Math.random()*Math.PI*2;this.speed=0.003+Math.random()*0.005;
+    this.rotSpeed=(Math.random()-.5)*0.004;this.rot=Math.random()*Math.PI*2;
+    this.pts=[];
+    const n=this.type==='tri'?3:this.type==='quad'?4:this.type==='pent'?5:6;
+    for(let i=0;i<n;i++){
+      const base=(i/n)*Math.PI*2,jitter=(Math.random()-.5)*.55,angle=base+jitter;
+      const r=this.size*(0.55+Math.random()*.55);
+      this.pts.push({ox:Math.cos(angle)*r,oy:Math.sin(angle)*r,px:Math.cos(angle)*r*(0.7+Math.random()*.5),py:Math.sin(angle)*r*(0.7+Math.random()*.5)});
+    }
+  }
+  draw(){
+    this.phase+=this.speed;this.rot+=this.rotSpeed;
+    const t=easeInOut((Math.sin(this.phase)+1)/2);
+    const c=this.col;
+    ctx.save();ctx.translate(this.cx,this.cy);ctx.rotate(this.rot);
+    ctx.beginPath();
+    this.pts.forEach((p,i)=>{const x=lerp(p.ox,p.px,t),y=lerp(p.oy,p.py,t);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)});
+    ctx.closePath();
+    ctx.fillStyle=`rgba(${c.r},${c.g},${c.b},${this.alpha*0.22})`;ctx.fill();
+    ctx.strokeStyle=`rgba(${c.r},${c.g},${c.b},${this.alpha*0.55})`;ctx.lineWidth=2;ctx.stroke();
+    ctx.restore();
+  }
+}
+
+// Each splatter is now totally unique — different shape, size, drip pattern, pulse rhythm
+class Splatter{
+  constructor(x,y,col,maxR,alpha,seed){
+    this.x=x;this.y=y;this.col=col;this.baseAlpha=alpha;this.alpha=alpha;
+    // Seeded randomness so each splatter is unique
+    const rnd=(()=>{let s=seed*9301+49297;return()=>{s=(s*9301+49297)%233280;return s/233280}})();
+    this.mainR=maxR*(0.25+rnd()*0.2);
+    // Shape variant: 0=blob, 1=elongated, 2=jagged, 3=spray-only, 4=drip-heavy
+    this.variant=Math.floor(rnd()*5);
+    // Unique streak angles — biased in one direction for each splatter
+    this.biasAngle=rnd()*Math.PI*2;
+    this.streaks=[];
+    const ns=Math.floor(rnd()*8)+4;
+    for(let i=0;i<ns;i++){
+      const spread=this.variant===2?Math.PI*2:Math.PI*(0.6+rnd()*0.8);
+      const a=this.biasAngle+(rnd()-.5)*spread;
+      const l=maxR*(rnd()*(this.variant===3?1.4:0.9)+0.3);
+      const w=rnd()*4+1;
+      this.streaks.push({angle:a,len:l,width:w,curve:(rnd()-.5)*0.4,taper:rnd()*.5+.5});
+    }
+    // Dots — scattered at varying distances
+    this.dots=[];
+    const nd=Math.floor(rnd()*60)+30;
+    for(let i=0;i<nd;i++){
+      const a=rnd()*Math.PI*2;
+      const d=Math.pow(rnd(),this.variant===3?0.3:0.65)*maxR*1.1;
+      this.dots.push({ox:Math.cos(a)*d,oy:Math.sin(a)*d,r:rnd()*3.5+0.4,a:rnd()*.7+.2});
+    }
+    // Drips — each splatter has a unique number and direction
+    this.drips=[];
+    const ndr=this.variant===4?Math.floor(rnd()*5)+3:Math.floor(rnd()*3)+1;
+    const dripAngle=rnd()*Math.PI*0.5+Math.PI*0.75; // mostly downward
+    for(let i=0;i<ndr;i++){
+      const da=dripAngle+(rnd()-.5)*0.6;
+      const len=maxR*(rnd()*1.3+0.5);
+      const ox=(rnd()-.5)*this.mainR*1.2;
+      const w=rnd()*3+1;
+      this.drips.push({ox,len,width:w,angle:da,wobble:rnd()*0.3});
+    }
+    // Sporadic pulsation — each splatter has completely different timing
+    this.breathe=rnd()*Math.PI*2;
+    this.breatheSpeed=0.008+rnd()*0.025; // wide range = sporadic
+    this.glowPhase=rnd()*Math.PI*2;
+    this.glowSpeed=0.012+rnd()*0.035;
+    // Some splatters have irregular "flicker" — sudden brightness spikes
+    this.flickerChance=rnd()*0.015;
+    this.flickerVal=1;
+    this.elongateX=this.variant===1?1.8+rnd()*0.6:1;
+    this.elongateY=this.variant===1?0.5+rnd()*0.3:1;
+  }
+  draw(){
+    this.breathe+=this.breatheSpeed;
+    this.glowPhase+=this.glowSpeed;
+    // Sporadic flicker
+    if(Math.random()<this.flickerChance) this.flickerVal=1.4+Math.random()*0.8;
+    else this.flickerVal=lerp(this.flickerVal,1,0.08);
+    const pulse=(0.88+Math.sin(this.breathe)*0.18)*this.flickerVal;
+    this.alpha=this.baseAlpha*(0.6+Math.sin(this.glowPhase)*0.42)*this.flickerVal;
+    const c=this.col,a=Math.min(this.alpha,1);
+    ctx.save();ctx.translate(this.x,this.y);
+    ctx.scale(pulse*this.elongateX,pulse*this.elongateY);
+    // Outer glow
+    const grad=ctx.createRadialGradient(0,0,0,0,0,this.mainR*3);
+    grad.addColorStop(0,`rgba(${c.r},${c.g},${c.b},${a*0.3})`);
+    grad.addColorStop(0.4,`rgba(${c.r},${c.g},${c.b},${a*0.1})`);
+    grad.addColorStop(1,`rgba(${c.r},${c.g},${c.b},0)`);
+    ctx.beginPath();ctx.arc(0,0,this.mainR*3,0,Math.PI*2);
+    ctx.fillStyle=grad;ctx.fill();
+    // Main blob — jagged variant uses polygon
+    if(this.variant===2){
+      ctx.beginPath();
+      const np=7+Math.floor(Math.sin(this.breathe)*2);
+      for(let i=0;i<np;i++){
+        const ang=(i/np)*Math.PI*2;
+        const r=this.mainR*(0.7+Math.sin(ang*3+this.breathe)*0.35);
+        i===0?ctx.moveTo(Math.cos(ang)*r,Math.sin(ang)*r):ctx.lineTo(Math.cos(ang)*r,Math.sin(ang)*r);
+      }
+      ctx.closePath();
+      ctx.fillStyle=`rgba(${c.r},${c.g},${c.b},${a*0.65})`;ctx.fill();
+    } else {
+      ctx.beginPath();ctx.arc(0,0,this.mainR,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${c.r},${c.g},${c.b},${a*0.65})`;ctx.fill();
+    }
+    // Curved streaks
+    this.streaks.forEach(s=>{
+      ctx.beginPath();ctx.moveTo(0,0);
+      const ex=Math.cos(s.angle)*s.len,ey=Math.sin(s.angle)*s.len;
+      const cpx=Math.cos(s.angle+s.curve)*s.len*0.5,cpy=Math.sin(s.angle+s.curve)*s.len*0.5;
+      ctx.quadraticCurveTo(cpx,cpy,ex,ey);
+      ctx.strokeStyle=`rgba(${c.r},${c.g},${c.b},${a*0.65})`;
+      ctx.lineWidth=s.width;ctx.lineCap='round';ctx.stroke();
+      ctx.beginPath();ctx.arc(ex,ey,s.width*s.taper*1.3,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${c.r},${c.g},${c.b},${a*0.7})`;ctx.fill();
+    });
+    // Dots
+    this.dots.forEach(d=>{
+      ctx.beginPath();ctx.arc(d.ox,d.oy,d.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${c.r},${c.g},${c.b},${a*d.a*0.8})`;ctx.fill();
+    });
+    // Drips — curved paths
+    this.drips.forEach(d=>{
+      ctx.beginPath();ctx.moveTo(d.ox,this.mainR*0.5);
+      const dx=Math.sin(d.angle)*d.len,dy=Math.cos(d.angle)*d.len;
+      ctx.bezierCurveTo(
+        d.ox+dx*0.2+d.wobble*d.len,dy*0.3,
+        d.ox+dx*0.1-d.wobble*d.len,dy*0.65,
+        d.ox+dx*0.15,dy
+      );
+      ctx.strokeStyle=`rgba(${c.r},${c.g},${c.b},${a*0.55})`;
+      ctx.lineWidth=d.width;ctx.lineCap='round';ctx.stroke();
+      ctx.beginPath();ctx.arc(d.ox+dx*0.15,dy,d.width*1.1,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${c.r},${c.g},${c.b},${a*0.6})`;ctx.fill();
+    });
+    ctx.restore();
+  }
+}
+
+let shapes=[],splatters=[];
+function init(){
+  shapes=[];splatters=[];
+  const S=Math.min(W,H);
+  shapes=[
+    new KandShape(.82*W,.1*H,COLS[0],S*.1,0.7,'tri'),
+    new KandShape(.08*W,.22*H,COLS[1],S*.12,0.6,'quad'),
+    new KandShape(.88*W,.65*H,COLS[2],S*.09,0.55,'pent'),
+    new KandShape(.15*W,.78*H,COLS[0],S*.11,0.5,'quad'),
+    new KandShape(.55*W,.92*H,COLS[1],S*.08,0.5,'tri'),
+    new KandShape(.35*W,.08*H,COLS[2],S*.07,0.45,'hex'),
+    new KandShape(.72*W,.38*H,COLS[0],S*.065,0.4,'pent'),
+    new KandShape(.42*W,.6*H,COLS[1],S*.06,0.35,'tri'),
+  ];
+  // Each splatter gets a unique seed so they all look different
+  const sp=[
+    {x:.85,y:.07,ci:0,r:.26,a:.75,seed:1},
+    {x:.08,y:.14,ci:1,r:.22,a:.70,seed:2},
+    {x:.95,y:.58,ci:2,r:.20,a:.72,seed:3},
+    {x:.04,y:.68,ci:0,r:.23,a:.68,seed:4},
+    {x:.62,y:.93,ci:1,r:.24,a:.72,seed:5},
+    {x:.38,y:.03,ci:2,r:.19,a:.65,seed:6},
+    {x:.18,y:.52,ci:0,r:.18,a:.60,seed:7},
+    {x:.78,y:.32,ci:2,r:.21,a:.68,seed:8},
+    {x:.50,y:.50,ci:1,r:.16,a:.55,seed:9},
+  ];
+  sp.forEach(s=>splatters.push(new Splatter(s.x*W,s.y*H,COLS[s.ci],S*s.r,s.a,s.seed)));
+}
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  shapes.forEach(s=>s.draw());
+  splatters.forEach(s=>s.draw());
+  requestAnimationFrame(draw);
+}
+window.addEventListener('resize',()=>{canvas.width=W=window.innerWidth;canvas.height=H=window.innerHeight;init()});
+resize();init();draw();
+
+</script>
+</body>
+</html>

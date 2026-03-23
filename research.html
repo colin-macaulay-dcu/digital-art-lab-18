@@ -1,73 +1,531 @@
-Research — Digital Art Lab
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research — Digital Art Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Playfair+Display:ital,wght@0,900;1,900&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--page-accent:#4ac9e3;--splatter-alpha-mult:0.35}
+
+:root{
+  --navy:#06101d;--navy2:#0a1825;--navy3:#0d2d4a;
+  --gold:#f5c400;--sea:#4ac9e3;--red:#e84c2b;
+  --white:#ffffff;--dim:#8ab4c4;
+  --glow-gold:0 0 24px rgba(245,196,0,.45);
+  --glow-sea:0 0 24px rgba(74,201,227,.4);
+  --glow-red:0 0 24px rgba(232,76,43,.45);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--navy);color:var(--white);overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:1}
+.dcu-bar{position:relative;z-index:10;background:rgba(6,16,29,.97);border-bottom:1px solid rgba(245,196,0,.18);padding:.5rem 3.5rem;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px)}
+.dcu-l{display:flex;align-items:center;gap:.9rem}
+.dcu-name{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.dcu-div{width:1px;height:.85rem;background:rgba(245,196,0,.2)}
+.dcu-sub{font-size:.67rem;color:var(--dim);letter-spacing:.04em}
+.dcu-a{font-family:'DM Mono',monospace;font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sea);transition:color .2s}
+.dcu-a:hover{color:var(--gold)}
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 3.5rem;background:rgba(6,16,29,.93);border-bottom:1px solid rgba(74,201,227,.12);backdrop-filter:blur(18px)}
+.nav-logo{display:flex;align-items:baseline;gap:.3rem}
+.nav-logo-tech{font-family:'Orbitron',sans-serif;font-size:.95rem;font-weight:900;letter-spacing:.1em;color:var(--gold);text-shadow:var(--glow-gold)}
+.nav-logo-art{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;font-style:italic;color:var(--sea);animation:seaGlow 3s ease-in-out infinite}
+@keyframes seaGlow{0%,100%{text-shadow:0 0 8px rgba(74,201,227,.4)}50%{text-shadow:0 0 18px rgba(74,201,227,.9),0 0 35px rgba(74,201,227,.4)}}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);transition:color .2s;position:relative;padding-bottom:2px}
+.nav-links a:hover{color:var(--sea)}
+.nav-links a.active{color:var(--page-accent,var(--gold))}
+.nav-links a.active::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:2px;background:var(--page-accent,var(--gold));box-shadow:0 0 8px var(--page-accent,var(--gold))}
+.nav-dot{display:flex;align-items:center;gap:.5rem;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.08em;color:var(--dim)}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--sea);box-shadow:var(--glow-sea);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+.hero{position:relative;z-index:1}
+.hero::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(74,201,227,.012) 3px,rgba(74,201,227,.012) 4px);pointer-events:none}
+.hero-inner{position:relative;z-index:2}
+.sec{padding:5rem 3.5rem;position:relative;z-index:1;background:transparent}
+.sec-tag{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--page-accent,var(--sea));margin-bottom:.8rem;display:flex;align-items:center;gap:.6rem}
+.sec-tag::before{content:'//';color:var(--gold);font-weight:700}
+.sec-h{margin-bottom:1.2rem;line-height:1}
+.sec-h .tech{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,2.2vw,2rem);font-weight:900;color:var(--gold);text-shadow:var(--glow-gold);display:inline}
+.sec-h .art{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,2.8vw,2.6rem);font-weight:900;font-style:italic;color:var(--white);display:inline}
+.sec-body{font-size:.95rem;line-height:1.75;color:var(--dim);max-width:620px}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.85rem 2rem;font-family:'DM Mono',monospace;font-size:.75rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;border:1.5px solid transparent;cursor:pointer;transition:all .25s}
+.btn-gold{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.btn-gold:hover{background:transparent;color:var(--gold);box-shadow:var(--glow-gold)}
+.btn-ghost{background:transparent;color:var(--sea);border-color:var(--sea)}
+.btn-ghost:hover{background:rgba(74,201,227,.1);box-shadow:var(--glow-sea)}
+footer{position:relative;z-index:1;background:rgba(6,16,29,.99);border-top:1px solid rgba(74,201,227,.1);padding:4rem 3.5rem;display:grid;grid-template-columns:2fr 1fr 1fr;gap:4rem}
+.f-logo{display:flex;align-items:baseline;gap:.3rem;margin-bottom:.9rem}
+.f-logo-tech{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:900;letter-spacing:.08em;color:var(--gold);text-shadow:var(--glow-gold)}
+.f-logo-art{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;font-style:italic;color:var(--sea)}
+.f-desc{font-size:.85rem;line-height:1.7;color:var(--dim);max-width:320px}
+.f-ct{font-family:'DM Mono',monospace;font-size:.68rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem}
+.f-links{list-style:none}
+.f-links li{margin-bottom:.6rem}
+.f-links a{font-size:.85rem;color:var(--dim);transition:color .2s}
+.f-links a:hover{color:var(--sea)}
+.f-bot{position:relative;z-index:1;background:rgba(6,16,29,.99);padding:1.2rem 3.5rem;border-top:1px solid rgba(74,201,227,.07);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+.f-bot p{font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.05em;color:rgba(138,180,196,.35)}
+.f-bot strong{color:var(--gold)}
+.f-bot a{color:var(--sea)}
+@media(max-width:900px){
+  .dcu-bar,.f-bot,nav{padding-left:1.5rem;padding-right:1.5rem}
+  .sec{padding-left:1.5rem;padding-right:1.5rem}
+  footer{grid-template-columns:1fr;gap:2rem;padding:2.5rem 1.5rem}
+  .nav-links{gap:1.2rem}
+  .nav-dot{display:none}
+}
 
 
-DUBLIN CITY UNIVERSITY
+.hero{background:rgba(6,16,29,.55);min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:6rem 3.5rem 4rem;gap:3rem}
+.hero-text{position:relative;z-index:2}
+.hero-tag{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--sea);margin-bottom:1.5rem;display:flex;align-items:center;gap:.7rem}
+.hero-tag::before{content:'//';color:var(--gold);font-weight:700}
+.h1-eyebrow{font-family:'Orbitron',sans-serif;font-size:clamp(1.2rem,2vw,1.8rem);font-weight:900;letter-spacing:.06em;color:var(--sea);text-shadow:var(--glow-sea);display:block;animation:slideUp .8s ease forwards}
+.h1-main{font-family:'Playfair Display',serif;font-size:clamp(3rem,5.5vw,5.5rem);font-weight:900;font-style:italic;color:var(--gold);text-shadow:var(--glow-gold);display:block;line-height:.9;animation:slideUp .8s .15s ease both;opacity:0}
+.h1-sub{font-family:'Orbitron',sans-serif;font-size:clamp(1rem,1.8vw,1.6rem);font-weight:900;letter-spacing:.06em;color:transparent;-webkit-text-stroke:1.5px var(--sea);display:block;animation:slideUp .8s .3s ease both, seaPulse 2.8s 1.2s ease-in-out infinite;opacity:0}
+@keyframes seaPulse{0%,100%{filter:drop-shadow(0 0 4px rgba(74,201,227,.5));-webkit-text-stroke:1.5px #4ac9e3}50%{filter:drop-shadow(0 0 14px rgba(74,201,227,.9)) drop-shadow(0 0 30px rgba(74,201,227,.4));-webkit-text-stroke:1.5px #a0eeff}}
+@keyframes slideUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.hero-desc{font-size:1rem;line-height:1.75;color:var(--dim);max-width:480px;margin-bottom:2.5rem;animation:slideUp .8s .45s ease both;opacity:0}
+.hero-cta{display:flex;gap:1rem;flex-wrap:wrap;animation:slideUp .8s .6s ease both;opacity:0}
+/* Hero visual — DBR orbital */
+.hero-visual{position:relative;z-index:2;display:flex;justify-content:center;align-items:center;height:480px}
+.dbr-wrap{position:relative;width:360px;height:360px;margin:0 auto}
+.dbr-outer{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(74,201,227,.18);animation:spin 25s linear infinite}
+.dbr-inner{position:absolute;inset:15%;border-radius:50%;border:1px solid rgba(245,196,0,.14);animation:spin 18s linear infinite reverse}
+.dbr-inner2{position:absolute;inset:30%;border-radius:50%;border:1px solid rgba(232,76,43,.1);animation:spin 11s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.dbr-ctr{position:absolute;inset:35%;border-radius:50%;background:radial-gradient(circle,rgba(245,196,0,.2),rgba(74,201,227,.08),transparent);border:1px solid rgba(245,196,0,.3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;animation:corepulse 3s ease-in-out infinite}
+@keyframes corepulse{0%,100%{box-shadow:0 0 20px rgba(245,196,0,.25)}50%{box-shadow:0 0 45px rgba(245,196,0,.55)}}
+.dbr-ctr-tech{font-family:'Orbitron',sans-serif;font-size:.45rem;font-weight:900;letter-spacing:.1em;color:var(--gold);text-align:center}
+.dbr-ctr-art{font-family:'Playfair Display',serif;font-size:.75rem;font-weight:900;font-style:italic;color:var(--white);text-align:center}
+.dbr-ctr-lab{font-family:'DM Mono',monospace;font-size:.42rem;letter-spacing:.1em;color:var(--sea);text-align:center}
+.dn{position:absolute;width:80px;height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.55rem;font-weight:500;text-align:center;text-transform:uppercase;letter-spacing:.05em;gap:2px;transition:filter .3s}
+.dn:hover{filter:brightness(1.6)}
+/* nodes positioned by JS orbital animation */
+.d1,.d2,.d3,.d4{position:absolute;transform:translate(-50%,-50%)}
+@keyframes nodePulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.7)}}
+.d-icon{font-size:.95rem;position:relative;z-index:1}
+.d-label{position:relative;z-index:1}
+/* Ticker */
+.ticker{position:relative;z-index:1;padding:.6rem 0;overflow:hidden;background:rgba(74,201,227,.05);border-top:1px solid rgba(74,201,227,.12);border-bottom:1px solid rgba(74,201,227,.12)}
+.ticker-track{display:flex;gap:3rem;white-space:nowrap;animation:tick 30s linear infinite}
+.ti{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--sea);flex-shrink:0;display:flex;align-items:center;gap:.7rem}
+.ti::before{content:'◆';font-size:.45rem;color:var(--gold)}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+/* Research body */
+.rg{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;margin-top:3rem}
+.rb{font-size:.92rem;line-height:1.8;color:var(--dim);margin-bottom:1rem}
+.rb strong{color:var(--gold)}
+.dcu-block{position:relative;z-index:1;background:rgba(13,45,74,.65);border-top:1px solid rgba(245,196,0,.14);border-bottom:1px solid rgba(245,196,0,.14);padding:4rem 3.5rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+.dcu-block h2{font-family:'Orbitron',sans-serif;font-size:clamp(1.3rem,2vw,1.8rem);font-weight:900;color:var(--gold);text-shadow:var(--glow-gold);margin-bottom:1rem;line-height:1.1}
+.dcu-block h2 span{font-family:'Playfair Display',serif;font-style:italic;color:var(--sea)}
+.dcu-block p{font-size:.9rem;line-height:1.75;color:var(--dim);margin-bottom:.9rem}
+.dcu-block a{font-family:'DM Mono',monospace;font-size:.73rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sea);transition:color .2s}
+.dcu-block a:hover{color:var(--gold)}
+.dcu-facts{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(74,201,227,.08);border:1px solid rgba(74,201,227,.1)}
+.df{background:rgba(13,45,74,.65);padding:1.8rem 1.5rem;transition:background .25s}
+.df:hover{background:rgba(245,196,0,.04)}
+.df-n{font-family:'Orbitron',sans-serif;font-size:1.7rem;font-weight:900;color:var(--gold);text-shadow:var(--glow-gold);line-height:1;margin-bottom:.4rem}
+.df-l{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--dim);line-height:1.4;letter-spacing:.04em}
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;padding:5rem 1.5rem 3rem;min-height:auto}
+  .hero-visual{display:none}
+  .rg{grid-template-columns:1fr;gap:2.5rem}
+  .dcu-block{grid-template-columns:1fr;gap:2rem;padding:2.5rem 1.5rem}
+  .dcu-facts{grid-template-columns:1fr 1fr}
+}
 
-Funded PhD Research · Institute of Education
-DCU.IE →
-Digital
-Art Lab
-* HOME
-* ABOUT
-* APPROACH
-* RESOURCES
-* RESEARCH
-THE RESEARCH BEHIND THE DAL · DCU · PHD STUDY
-Grounded in —
-Design-Based
-Research_
-The DAL is the central practical output of a PhD study at DCU: Fostering Digital Empowerment — An Online Multi-Media Art Resource for Irish Primary School Teachers.
-EXPLORE THE RESEARCH → VISIT DCU → 
-DESIGN-BASED RESEARCHDCU INSTITUTE OF EDUCATIONIRISH PRIMARY CURRICULUMPHD RESEARCHDIGITAL EMPOWERMENTVISUAL ARTS EDUCATIONWORKSHOP IMPLEMENTATIONITERATIVE DESIGNTEACHER EMPOWERMENT DESIGN-BASED RESEARCHDCU INSTITUTE OF EDUCATIONIRISH PRIMARY CURRICULUMPHD RESEARCHDIGITAL EMPOWERMENTVISUAL ARTS EDUCATIONWORKSHOP IMPLEMENTATIONITERATIVE DESIGNTEACHER EMPOWERMENT 
-THE PHD STUDY
-Design-Based Research
-The platform is built iteratively — through real cycles of design, workshop implementation, reflection, and refinement. It is both a research intervention and a practical tool for teachers.
-The research sits within the context of the new Irish Primary Curriculum — particularly its emphasis on creativity, agency, inclusion, and the development of contemporary competencies in Visual Arts education.
-Unlike traditional research that tests a finished product, DBR develops the intervention and the knowledge simultaneously — meaning the DAL platform is shaped by what teachers say, do, and discover in real workshops throughout the research process.
-GET IN TOUCH → 
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div class="dcu-bar">
+  <div class="dcu-l">
+    <span class="dcu-name">Dublin City University</span>
+    <div class="dcu-div"></div>
+    <span class="dcu-sub">Funded PhD Research · Institute of Education</span>
+  </div>
+  <a href="https://www.dcu.ie" target="_blank" class="dcu-a">dcu.ie →</a>
+</div>
+<nav>
+  <a href="index.html" class="nav-logo">
+    <span class="nav-logo-tech">Digital</span>
+    <span class="nav-logo-art">Art Lab</span>
+  </a>
+  <ul class="nav-links"><li><a href="index.html">Home</a></li>
+<li><a href="about.html">About</a></li>
+<li><a href="approach.html">Approach</a></li>
+<li><a href="resources.html">Resources</a></li>
+<li><a href="research.html" class="active">Research</a></li>
+</ul>
+  <div class="nav-dot"><div class="pulse"></div>Live Platform</div>
+</nav>
+
+<div class="hero">
+  <div class="hero-text">
+    <p class="hero-tag">The Research Behind the DAL · DCU · PhD Study</p>
+    <div>
+      <span class="h1-eyebrow">Grounded in —</span>
+      <span class="h1-main">Design-Based</span>
+      <span class="h1-sub">Research_</span>
+    </div>
+    <p class="hero-desc" style="animation:slideUp .8s .45s ease both;opacity:0">The DAL is the central practical output of a PhD study at DCU: <em>Fostering Digital Empowerment — An Online Multi-Media Art Resource for Irish Primary School Teachers.</em></p>
+    <div class="hero-cta">
+      <a href="#dbr" class="btn btn-gold">Explore the Research →</a>
+      <a href="https://www.dcu.ie" target="_blank" class="btn btn-ghost">Visit DCU →</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="dbr-wrap" id="hero-dbr">
+      <div class="dbr-outer"></div>
+      <div class="dbr-inner"></div>
+      <div class="dbr-inner2"></div>
+      <div class="dbr-ctr">
+        <span class="dbr-ctr-tech">DESIGN</span>
+        <span class="dbr-ctr-art">Based</span>
+        <span class="dbr-ctr-lab">RESEARCH</span>
+      </div>
+      <div class="dn d1">
+        <svg viewBox="0 0 80 80" width="80" height="80" style="position:absolute;inset:0;overflow:visible"><path d="M38,3 C56,0 76,12 78,30 C80,48 64,68 46,74 C28,80 6,66 3,48 C0,30 14,8 32,4 C34,3 36,3 38,3Z" fill="rgba(232,76,43,.22)" stroke="rgba(232,76,43,.75)" stroke-width="1.5"/></svg>
+        <span class="d-icon">✏️</span><span class="d-label" style="color:var(--red)">Design</span>
+      </div>
+      <div class="dn d2">
+        <svg viewBox="0 0 80 80" width="80" height="80" style="position:absolute;inset:0;overflow:visible"><path d="M6,32 C10,14 28,2 46,6 C64,10 80,28 76,46 C72,64 52,78 34,74 C16,70 2,54 4,36 C5,34 5,33 6,32Z" fill="rgba(74,201,227,.16)" stroke="rgba(74,201,227,.65)" stroke-width="1.5"/></svg>
+        <span class="d-icon">🚀</span><span class="d-label" style="color:var(--sea)">Implement</span>
+      </div>
+      <div class="dn d3">
+        <svg viewBox="0 0 80 80" width="80" height="80" style="position:absolute;inset:0;overflow:visible"><path d="M42,2 C60,4 78,18 76,36 C74,52 60,70 42,74 C26,78 6,66 4,48 C2,32 14,10 30,4 C34,2 38,1 42,2Z" fill="rgba(245,196,0,.16)" stroke="rgba(245,196,0,.65)" stroke-width="1.5"/></svg>
+        <span class="d-icon">🔍</span><span class="d-label" style="color:var(--gold)">Reflect</span>
+      </div>
+      <div class="dn d4">
+        <svg viewBox="0 0 80 80" width="80" height="80" style="position:absolute;inset:0;overflow:visible"><path d="M10,20 C18,6 38,0 54,8 C70,16 80,36 74,52 C68,68 48,78 30,72 C14,66 2,48 4,32 C6,26 7,24 10,20Z" fill="rgba(74,201,227,.13)" stroke="rgba(74,201,227,.55)" stroke-width="1.5"/></svg>
+        <span class="d-icon">🔄</span><span class="d-label" style="color:var(--sea)">Refine</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ti">Design-Based Research</span><span class="ti">DCU Institute of Education</span><span class="ti">Irish Primary Curriculum</span><span class="ti">PhD Research</span><span class="ti">Digital Empowerment</span><span class="ti">Visual Arts Education</span><span class="ti">Workshop Implementation</span><span class="ti">Iterative Design</span><span class="ti">Teacher Empowerment</span>
+    <span class="ti">Design-Based Research</span><span class="ti">DCU Institute of Education</span><span class="ti">Irish Primary Curriculum</span><span class="ti">PhD Research</span><span class="ti">Digital Empowerment</span><span class="ti">Visual Arts Education</span><span class="ti">Workshop Implementation</span><span class="ti">Iterative Design</span><span class="ti">Teacher Empowerment</span>
+  </div>
+</div>
+
+<div class="sec" id="dbr" style="background:rgba(10,24,37,.58)">
+  <div class="rg">
+    <div>
+      <p class="sec-tag">The PhD Study</p>
+      <h2 class="sec-h"><span class="tech">Design-Based</span> <span class="art">Research</span></h2>
+      <p class="rb">The platform is built iteratively — through <strong>real cycles of design, workshop implementation, reflection, and refinement</strong>. It is both a research intervention and a practical tool for teachers.</p>
+      <p class="rb">The research sits within the context of the new Irish Primary Curriculum — particularly its emphasis on creativity, agency, inclusion, and the development of contemporary competencies in Visual Arts education.</p>
+      <p class="rb">Unlike traditional research that tests a finished product, DBR <strong>develops the intervention and the knowledge simultaneously</strong> — meaning the DAL platform is shaped by what teachers say, do, and discover in real workshops throughout the research process.</p>
+      <a href="/cdn-cgi/l/email-protection#b6" class="btn btn-gold" style="margin-top:1.5rem">Get in Touch →</a>
+    </div>
+    <div>
+      <div class="dbr-wrap" id="content-dbr">
+        <div class="dbr-outer"></div>
+        <div class="dbr-inner"></div>
+        <div class="dbr-ctr">Design-Based<br>Research<br>Cycle</div>
+        <div class="dn d1">
+          <svg viewBox="0 0 80 80" width="80" height="80" style="position:absolute;inset:0;overflow:visible"><path d="M38,3 C56,0 76,12 78,30 C80,48 64,68 46,74 C28,80 6,66 3,48 C0,30 14,8 32,4 C34,3 36,3 38,3Z" fill="rgba(232,76,43,.22)" stroke="rgba(232,76,43,.75)" stroke-width="1.5"/></svg>
+          <span class="d-icon">✏️</span><span class="d-label" style="color:var(--red)">Design</span>
+        </div>
+        <div class="dn d2">
+          <svg viewBox="0 0 80 80" width="80" height="80" style="position:absolute;inset:0;overflow:visible"><path d="M6,32 C10,14 28,2 46,6 C64,10 80,28 76,46 C72,64 52,78 34,74 C16,70 2,54 4,36 C5,34 5,33 6,32Z" fill="rgba(74,201,227,.16)" stroke="rgba(74,201,227,.65)" stroke-width="1.5"/></svg>
+          <span class="d-icon">🚀</span><span class="d-label" style="color:var(--sea)">Implement</span>
+        </div>
+        <div class="dn d3">
+          <svg viewBox="0 0 80 80" width="80" height="80" style="position:absolute;inset:0;overflow:visible"><path d="M42,2 C60,4 78,18 76,36 C74,52 60,70 42,74 C26,78 6,66 4,48 C2,32 14,10 30,4 C34,2 38,1 42,2Z" fill="rgba(245,196,0,.16)" stroke="rgba(245,196,0,.65)" stroke-width="1.5"/></svg>
+          <span class="d-icon">🔍</span><span class="d-label" style="color:var(--gold)">Reflect</span>
+        </div>
+        <div class="dn d4">
+          <svg viewBox="0 0 80 80" width="80" height="80" style="position:absolute;inset:0;overflow:visible"><path d="M10,20 C18,6 38,0 54,8 C70,16 80,36 74,52 C68,68 48,78 30,72 C14,66 2,48 4,32 C6,26 7,24 10,20Z" fill="rgba(74,201,227,.13)" stroke="rgba(74,201,227,.55)" stroke-width="1.5"/></svg>
+          <span class="d-icon">🔄</span><span class="d-label" style="color:var(--sea)">Refine</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="dcu-block">
+  <div>
+    <h2>PhD Research at <span>Dublin City University</span></h2>
+    <p>The Digital Art Lab is the central output of a funded PhD study at DCU's Institute of Education — one of Ireland's leading centres for educational research and teacher education.</p>
+    <p>The research reflects DCU's commitment to purposeful, innovative, and socially engaged scholarship in teaching and learning.</p>
+    <a href="https://www.dcu.ie" target="_blank">Visit dcu.ie →</a>
+  </div>
+  <div class="dcu-facts">
+    <div class="df"><div class="df-n">DCU</div><div class="df-l">Dublin City University — Purposefully Different, Consistently Excellent</div></div>
+    <div class="df"><div class="df-n">IoE</div><div class="df-l">Institute of Education — Ireland's largest provider of teacher education</div></div>
+    <div class="df"><div class="df-n">DBR</div><div class="df-l">Design-Based Research — theory and practice in dialogue</div></div>
+    <div class="df"><div class="df-n">IPC</div><div class="df-l">Aligned with the new Irish Primary Curriculum — Visual Arts</div></div>
+  </div>
+</div>
+
+<footer>
+  <div>
+    <div class="f-logo"><span class="f-logo-tech">Digital</span><span class="f-logo-art">Art Lab</span></div>
+    <p class="f-desc">A creative tech resource platform for Irish primary teachers — where traditional art-making meets digital technology, grounded in the Irish Primary Curriculum.</p>
+  </div>
+  <div>
+    <p class="f-ct">Platform</p>
+    <ul class="f-links">
+      <li><a href="resources.html">Resources</a></li>
+      <li><a href="talking-avatar.html">Lesson Ideas</a></li>
+      <li><a href="about.html">About the DAL</a></li>
+      <li><a href="approach.html">Our Approach</a></li>
+      <li><a href="research.html">Research</a></li>
+    </ul>
+  </div>
+  <div>
+    <p class="f-ct">Project</p>
+    <ul class="f-links">
+      <li><a href="research.html">Research Background</a></li>
+      <li><a href="#">Teacher Voices</a></li>
+      <li><a href="#">Process Videos</a></li>
+      <li><a href="#">Give Feedback</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="f-bot">
+  <p>Digital Art Lab — <strong>PhD Research Platform</strong> · <a href="https://www.dcu.ie" target="_blank">Dublin City University</a></p>
+  <p>Fostering Digital Empowerment in Irish Primary Visual Arts Education</p>
+</div>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+const canvas=document.getElementById('bg');
+const ctx=canvas.getContext('2d');
+let W,H;
+const COLS=[{r:245,g:196,b:0},{r:74,g:201,b:227},{r:232,g:76,b:43}];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+function lerp(a,b,t){return a+(b-a)*t}
+function easeInOut(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2}
+
+// Kandinsky morphing polygon
+class KandShape{
+  constructor(cx,cy,col,size,alpha,type){
+    this.cx=cx;this.cy=cy;this.col=col;this.size=size;this.alpha=alpha;this.type=type;
+    this.phase=Math.random()*Math.PI*2;this.speed=0.003+Math.random()*0.005;
+    this.rotSpeed=(Math.random()-.5)*0.004;this.rot=Math.random()*Math.PI*2;
+    this.pts=[];
+    const n=this.type==='tri'?3:this.type==='quad'?4:this.type==='pent'?5:6;
+    for(let i=0;i<n;i++){
+      const base=(i/n)*Math.PI*2,jitter=(Math.random()-.5)*.55,angle=base+jitter;
+      const r=this.size*(0.55+Math.random()*.55);
+      this.pts.push({ox:Math.cos(angle)*r,oy:Math.sin(angle)*r,px:Math.cos(angle)*r*(0.7+Math.random()*.5),py:Math.sin(angle)*r*(0.7+Math.random()*.5)});
+    }
+  }
+  draw(){
+    this.phase+=this.speed;this.rot+=this.rotSpeed;
+    const t=easeInOut((Math.sin(this.phase)+1)/2);
+    const c=this.col;
+    ctx.save();ctx.translate(this.cx,this.cy);ctx.rotate(this.rot);
+    ctx.beginPath();
+    this.pts.forEach((p,i)=>{const x=lerp(p.ox,p.px,t),y=lerp(p.oy,p.py,t);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)});
+    ctx.closePath();
+    ctx.fillStyle=`rgba(${c.r},${c.g},${c.b},${this.alpha*0.22})`;ctx.fill();
+    ctx.strokeStyle=`rgba(${c.r},${c.g},${c.b},${this.alpha*0.55})`;ctx.lineWidth=2;ctx.stroke();
+    ctx.restore();
+  }
+}
+
+// Each splatter is now totally unique — different shape, size, drip pattern, pulse rhythm
+class Splatter{
+  constructor(x,y,col,maxR,alpha,seed){
+    this.x=x;this.y=y;this.col=col;this.baseAlpha=alpha;this.alpha=alpha;
+    // Seeded randomness so each splatter is unique
+    const rnd=(()=>{let s=seed*9301+49297;return()=>{s=(s*9301+49297)%233280;return s/233280}})();
+    this.mainR=maxR*(0.25+rnd()*0.2);
+    // Shape variant: 0=blob, 1=elongated, 2=jagged, 3=spray-only, 4=drip-heavy
+    this.variant=Math.floor(rnd()*5);
+    // Unique streak angles — biased in one direction for each splatter
+    this.biasAngle=rnd()*Math.PI*2;
+    this.streaks=[];
+    const ns=Math.floor(rnd()*8)+4;
+    for(let i=0;i<ns;i++){
+      const spread=this.variant===2?Math.PI*2:Math.PI*(0.6+rnd()*0.8);
+      const a=this.biasAngle+(rnd()-.5)*spread;
+      const l=maxR*(rnd()*(this.variant===3?1.4:0.9)+0.3);
+      const w=rnd()*4+1;
+      this.streaks.push({angle:a,len:l,width:w,curve:(rnd()-.5)*0.4,taper:rnd()*.5+.5});
+    }
+    // Dots — scattered at varying distances
+    this.dots=[];
+    const nd=Math.floor(rnd()*60)+30;
+    for(let i=0;i<nd;i++){
+      const a=rnd()*Math.PI*2;
+      const d=Math.pow(rnd(),this.variant===3?0.3:0.65)*maxR*1.1;
+      this.dots.push({ox:Math.cos(a)*d,oy:Math.sin(a)*d,r:rnd()*3.5+0.4,a:rnd()*.7+.2});
+    }
+    // Drips — each splatter has a unique number and direction
+    this.drips=[];
+    const ndr=this.variant===4?Math.floor(rnd()*5)+3:Math.floor(rnd()*3)+1;
+    const dripAngle=rnd()*Math.PI*0.5+Math.PI*0.75; // mostly downward
+    for(let i=0;i<ndr;i++){
+      const da=dripAngle+(rnd()-.5)*0.6;
+      const len=maxR*(rnd()*1.3+0.5);
+      const ox=(rnd()-.5)*this.mainR*1.2;
+      const w=rnd()*3+1;
+      this.drips.push({ox,len,width:w,angle:da,wobble:rnd()*0.3});
+    }
+    // Sporadic pulsation — each splatter has completely different timing
+    this.breathe=rnd()*Math.PI*2;
+    this.breatheSpeed=0.008+rnd()*0.025; // wide range = sporadic
+    this.glowPhase=rnd()*Math.PI*2;
+    this.glowSpeed=0.012+rnd()*0.035;
+    // Some splatters have irregular "flicker" — sudden brightness spikes
+    this.flickerChance=rnd()*0.015;
+    this.flickerVal=1;
+    this.elongateX=this.variant===1?1.8+rnd()*0.6:1;
+    this.elongateY=this.variant===1?0.5+rnd()*0.3:1;
+  }
+  draw(){
+    this.breathe+=this.breatheSpeed;
+    this.glowPhase+=this.glowSpeed;
+    // Sporadic flicker
+    if(Math.random()<this.flickerChance) this.flickerVal=1.4+Math.random()*0.8;
+    else this.flickerVal=lerp(this.flickerVal,1,0.08);
+    const pulse=(0.88+Math.sin(this.breathe)*0.18)*this.flickerVal;
+    this.alpha=this.baseAlpha*(0.6+Math.sin(this.glowPhase)*0.42)*this.flickerVal;
+    const c=this.col,a=Math.min(this.alpha,1);
+    ctx.save();ctx.translate(this.x,this.y);
+    ctx.scale(pulse*this.elongateX,pulse*this.elongateY);
+    // Outer glow
+    const grad=ctx.createRadialGradient(0,0,0,0,0,this.mainR*3);
+    grad.addColorStop(0,`rgba(${c.r},${c.g},${c.b},${a*0.3})`);
+    grad.addColorStop(0.4,`rgba(${c.r},${c.g},${c.b},${a*0.1})`);
+    grad.addColorStop(1,`rgba(${c.r},${c.g},${c.b},0)`);
+    ctx.beginPath();ctx.arc(0,0,this.mainR*3,0,Math.PI*2);
+    ctx.fillStyle=grad;ctx.fill();
+    // Main blob — jagged variant uses polygon
+    if(this.variant===2){
+      ctx.beginPath();
+      const np=7+Math.floor(Math.sin(this.breathe)*2);
+      for(let i=0;i<np;i++){
+        const ang=(i/np)*Math.PI*2;
+        const r=this.mainR*(0.7+Math.sin(ang*3+this.breathe)*0.35);
+        i===0?ctx.moveTo(Math.cos(ang)*r,Math.sin(ang)*r):ctx.lineTo(Math.cos(ang)*r,Math.sin(ang)*r);
+      }
+      ctx.closePath();
+      ctx.fillStyle=`rgba(${c.r},${c.g},${c.b},${a*0.65})`;ctx.fill();
+    } else {
+      ctx.beginPath();ctx.arc(0,0,this.mainR,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${c.r},${c.g},${c.b},${a*0.65})`;ctx.fill();
+    }
+    // Curved streaks
+    this.streaks.forEach(s=>{
+      ctx.beginPath();ctx.moveTo(0,0);
+      const ex=Math.cos(s.angle)*s.len,ey=Math.sin(s.angle)*s.len;
+      const cpx=Math.cos(s.angle+s.curve)*s.len*0.5,cpy=Math.sin(s.angle+s.curve)*s.len*0.5;
+      ctx.quadraticCurveTo(cpx,cpy,ex,ey);
+      ctx.strokeStyle=`rgba(${c.r},${c.g},${c.b},${a*0.65})`;
+      ctx.lineWidth=s.width;ctx.lineCap='round';ctx.stroke();
+      ctx.beginPath();ctx.arc(ex,ey,s.width*s.taper*1.3,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${c.r},${c.g},${c.b},${a*0.7})`;ctx.fill();
+    });
+    // Dots
+    this.dots.forEach(d=>{
+      ctx.beginPath();ctx.arc(d.ox,d.oy,d.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${c.r},${c.g},${c.b},${a*d.a*0.8})`;ctx.fill();
+    });
+    // Drips — curved paths
+    this.drips.forEach(d=>{
+      ctx.beginPath();ctx.moveTo(d.ox,this.mainR*0.5);
+      const dx=Math.sin(d.angle)*d.len,dy=Math.cos(d.angle)*d.len;
+      ctx.bezierCurveTo(
+        d.ox+dx*0.2+d.wobble*d.len,dy*0.3,
+        d.ox+dx*0.1-d.wobble*d.len,dy*0.65,
+        d.ox+dx*0.15,dy
+      );
+      ctx.strokeStyle=`rgba(${c.r},${c.g},${c.b},${a*0.55})`;
+      ctx.lineWidth=d.width;ctx.lineCap='round';ctx.stroke();
+      ctx.beginPath();ctx.arc(d.ox+dx*0.15,dy,d.width*1.1,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${c.r},${c.g},${c.b},${a*0.6})`;ctx.fill();
+    });
+    ctx.restore();
+  }
+}
+
+let shapes=[],splatters=[];
+function init(){
+  shapes=[];splatters=[];
+  const S=Math.min(W,H);
+  shapes=[
+    new KandShape(.82*W,.1*H,COLS[0],S*.1,0.7,'tri'),
+    new KandShape(.08*W,.22*H,COLS[1],S*.12,0.6,'quad'),
+    new KandShape(.88*W,.65*H,COLS[2],S*.09,0.55,'pent'),
+    new KandShape(.15*W,.78*H,COLS[0],S*.11,0.5,'quad'),
+    new KandShape(.55*W,.92*H,COLS[1],S*.08,0.5,'tri'),
+    new KandShape(.35*W,.08*H,COLS[2],S*.07,0.45,'hex'),
+    new KandShape(.72*W,.38*H,COLS[0],S*.065,0.4,'pent'),
+    new KandShape(.42*W,.6*H,COLS[1],S*.06,0.35,'tri'),
+  ];
+  // Each splatter gets a unique seed so they all look different
+  const sp=[
+    {x:.85,y:.07,ci:0,r:.26,a:.75,seed:1},
+    {x:.08,y:.14,ci:1,r:.22,a:.70,seed:2},
+    {x:.95,y:.58,ci:2,r:.20,a:.72,seed:3},
+    {x:.04,y:.68,ci:0,r:.23,a:.68,seed:4},
+    {x:.62,y:.93,ci:1,r:.24,a:.72,seed:5},
+    {x:.38,y:.03,ci:2,r:.19,a:.65,seed:6},
+    {x:.18,y:.52,ci:0,r:.18,a:.60,seed:7},
+    {x:.78,y:.32,ci:2,r:.21,a:.68,seed:8},
+    {x:.50,y:.50,ci:1,r:.16,a:.55,seed:9},
+  ];
+  sp.forEach(s=>splatters.push(new Splatter(s.x*W,s.y*H,COLS[s.ci],S*s.r*0.65,s.a*0.3,s.seed)));
+}
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  shapes.forEach(s=>s.draw());
+  splatters.forEach(s=>s.draw());
+  requestAnimationFrame(draw);
+}
+window.addEventListener('resize',()=>{canvas.width=W=window.innerWidth;canvas.height=H=window.innerHeight;init()});
+resize();init();draw();
 
 
-Design-Based
-Research
-Cycle
+// ── ORBITAL ANIMATION — hero DBR ──────────────────────────────
+(function(){
+  function initOrbit(wrapId, nodeSelector, speed){
+    const wrap = document.getElementById(wrapId);
+    if(!wrap) return;
+    const nodes = Array.from(wrap.querySelectorAll(nodeSelector));
+    const colors = [
+      'rgba(232,76,43,',
+      'rgba(74,201,227,',
+      'rgba(245,196,0,',
+      'rgba(74,201,227,'
+    ];
+    let angle = 0, last = null;
+    function animate(ts){
+      if(!last) last = ts;
+      const dt = (ts - last) / 1000; last = ts;
+      angle += dt * speed;
+      const size = wrap.offsetWidth;
+      const cx = size / 2, cy = size / 2;
+      nodes.forEach((n, i) => {
+        const a = angle + (i / nodes.length) * Math.PI * 2;
+        const r = size * 0.46;
+        n.style.left = (cx + Math.cos(a) * r) + 'px';
+        n.style.top  = (cy + Math.sin(a) * r) + 'px';
+        const pulse = 0.55 + Math.sin(a - Math.PI/2) * 0.45;
+        const glow = 6 + pulse * 18;
+        n.style.filter = `brightness(${0.8 + pulse * 0.8}) drop-shadow(0 0 ${glow}px ${colors[i]}${0.4 + pulse * 0.6}))`;
+        const svg = n.querySelector('svg');
+        if(svg) svg.style.transform = `scale(${0.88 + pulse * 0.24})`;
+      });
+      requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
+  }
+  // Hero — fast orbit
+  initOrbit('hero-dbr', '.dn', 0.38);
+  // Content section — slower orbit
+  initOrbit('content-dbr', '.dn', 0.22);
+})();
 
-✏️
-DESIGN
-
-🚀
-IMPLEMENT
-
-🔍
-REFLECT
-
-🔄
-REFINE
-PhD Research at Dublin City University
-The Digital Art Lab is the central output of a funded PhD study at DCU's Institute of Education — one of Ireland's leading centres for educational research and teacher education.
-The research reflects DCU's commitment to purposeful, innovative, and socially engaged scholarship in teaching and learning.
-VISIT DCU.IE → 
-DCU
-Dublin City University — Purposefully Different, Consistently Excellent
-IoE
-Institute of Education — Ireland's largest provider of teacher education
-DBR
-Design-Based Research — theory and practice in dialogue
-IPC
-Aligned with the new Irish Primary Curriculum — Visual Arts
-Digital
-Art Lab
-A creative tech resource platform for Irish primary teachers — where traditional art-making meets digital technology, grounded in the Irish Primary Curriculum.
-PLATFORM
-* Resources
-* Lesson Ideas
-* About the DAL
-* Our Approach
-* Research
-PROJECT
-* Research Background
-* Teacher Voices
-* Process Videos
-* Give Feedback
-* Contact
-Digital Art Lab — PhD Research Platform · Dublin City University
-Fostering Digital Empowerment in Irish Primary Visual Arts Education
+</script>
